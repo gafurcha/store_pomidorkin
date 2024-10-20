@@ -1,0 +1,53 @@
+#Cтавим необходимые пакеты Python#
+pip install mysql-connector-python flask
+
+#Импортируем необходимые для работы модули#
+from flask import Flask, render_template
+import mysql. connector
+
+#Создаём подключение к онлайн базе данных MySQL#
+python
+Copy code
+connection = mysql. connector. connect (
+    host='адрес_сервера_базы_данных',
+    user='пользователь',
+    password='пароль',
+    database='название_базы_данных'
+)
+
+#Далее создаём объект Flask для использования набора инструментов Werkzeug, а также шаблонизатор Jinja2#
+app = Flask(__name__)
+
+#Определяем маршрут для отображения витрины магазина#
+@app. route ('/')
+def show_store ():
+    cursor = connection. cursor ()
+    cursor. execute ('SELECT * FROM products')
+    products = cursor. fetchall()
+    cursor. close ()
+    return render_template ('store.html', products=products)
+
+
+#Создаём шаблон HTML (store.html), где вы можете отобразить товары#
+html
+Copy code
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Магазин</title>
+</head>
+<body>
+    <h1> Витрина магазина</h1>
+    <ul>
+        {% for product in products %}
+            <li> {{product.name}} - {{product.price }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
+#Запускаем веб-сервер Flask#
+python
+Copy code
+if __name__ == '__main__':
+    app.run ()
